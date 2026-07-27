@@ -1,0 +1,88 @@
+name: diginews_offline_first
+description: "DigiNews Offline-First - Enterprise Smart Dashboard (UAS Mobile Programming Lanjut)"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^8.1.5
+  bloc_concurrency: ^0.2.5
+  equatable: ^2.0.5
+
+  # Dependency Injection
+  get_it: ^7.7.0
+
+  # Routing
+  go_router: ^14.2.0
+
+  # Networking
+  dio: ^5.4.3+1
+  connectivity_plus: ^6.0.3
+
+  # Functional error handling (Either<Failure, Success>)
+  dartz: ^0.10.1
+
+  # Realtime
+  web_socket_channel: ^2.4.0
+
+  # Offline First / Local Database
+  # CATATAN PENTING: package resmi "isar" (isar/isar) sudah TIDAK dipelihara
+  # lagi sejak awal 2025 oleh maintainer aslinya, dan constraint
+  # `analyzer <6.0.0` miliknya bentrok dengan bloc_test/flutter_test modern.
+  # Solusi resmi dari komunitas: pakai fork aktif "isar_community"
+  # (isar-community.dev, publisher terverifikasi pub.dev) - API 100% identik
+  # dengan isar biasa (Isar.open, @collection, filter(), dst), hanya nama
+  # package & import yang berbeda.
+  isar_community: ^3.3.2
+  isar_community_flutter_libs: ^3.3.2
+
+  # Background Sync
+  # CATATAN: workmanager 0.5.2 (versi lama) punya bug publik - masih memakai
+  # kelas v1 Android embedding (ShimPluginRegistry dkk) yang sudah DIHAPUS
+  # total dari Flutter SDK terbaru, menyebabkan compileDebugKotlin gagal.
+  # Versi 0.9.0+3 (federated plugin architecture) sudah memperbaiki ini.
+  workmanager: ^0.9.0+3
+
+  # Storage
+  shared_preferences: ^2.2.3
+
+  # Animation
+  lottie: ^3.1.2
+
+  # Logging
+  logger: ^2.3.0
+
+  # Utils
+  intl: ^0.19.0
+  cached_network_image: ^3.3.1
+  path_provider: ^2.1.3
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+  # Code generation
+  build_runner: ^2.4.11
+  isar_community_generator: ^3.3.2
+
+  # Testing
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/lottie/easter_egg.json
