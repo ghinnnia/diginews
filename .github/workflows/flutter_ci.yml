@@ -1,0 +1,101 @@
+name: DigiNews CI/CD
+
+# Wajib soal (Bobot 30%): pipeline harus melakukan Testing DAN Build APK Release.
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate kode (Isar build_runner)
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Jalankan Unit & Widget Test
+        run: flutter test --coverage
+
+      - name: Upload hasil coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/lcov.info
+
+  build_apk:
+    name: Build APK Release (DEV & PROD)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate kode (Isar build_runner)
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      # Build APK Release flavor PROD -> "UTD - 20123046", warna Biru Gelap
+      - name: Build APK Release (flavor PROD)
+        run: |
+          flutter build apk --release \
+            --flavor prod \
+            -t lib/main_prod.dart \
+            --dart-define=FLAVOR=prod
+
+      # Build APK Release flavor DEV -> "DEV - Ghinnia" (bukti 2 flavor berjalan)
+      - name: Build APK Release (flavor DEV)
+        run: |
+          flutter build apk --release \
+            --flavor dev \
+            -t lib/main_dev.dart \
+            --dart-define=FLAVOR=dev
+
+      - name: Upload APK PROD sebagai artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diginews-prod-release-apk
+          path: build/app/outputs/flutter-apk/app-prod-release.apk
+
+      - name: Upload APK DEV sebagai artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diginews-dev-release-apk
+          path: build/app/outputs/flutter-apk/app-dev-release.apk
