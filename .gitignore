@@ -1,0 +1,38 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+pubspec.lock
+
+# Generated code (Isar, dll)
+**/*.g.dart
+**/*.freezed.dart
+
+# Android
+android/local.properties
+android/.gradle/
+android/gradle-wrapper.jar
+android/app/debug
+android/app/profile
+android/app/release
+*.jks
+key.properties
+
+# Kecuali debug.keystore project ini (sengaja disertakan agar CI/CD bisa
+# build APK release tanpa perlu secret keystore tambahan)
+!android/debug.keystore
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Coverage
+coverage/
